@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f3f3f1">
+  <title>给昕的一段回忆</title>
+  <style>
+    /* 基础配色与页面尺寸：适配手机和微信内置浏览器 */
+    :root {
+      color-scheme: light;
+      --paper: #f3f3f1;
+      --ink: #626260;
+      --soft-pink: #c997a3;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      padding: max(28px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right))
+               max(28px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left));
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      transition: background-color 2.4s ease;
+    }
+
+    body.is-white { background: #fff; }
+
+    main {
+      width: 100%;
+      max-width: 720px;
+      text-align: center;
+    }
+
+    .scene {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.58em;
+    }
+
+    .line {
+      max-width: 100%;
+      color: var(--ink);
+      font-size: clamp(18px, 4.5vw, 25px);
+      font-weight: 400;
+      line-height: 1.9;
+      letter-spacing: 0.045em;
+      overflow-wrap: anywhere;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 1.25s ease, transform 1.25s ease;
+      will-change: opacity, transform;
+    }
+
+    .line.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .line.is-date {
+      color: #777775;
+      font-size: clamp(25px, 6vw, 34px);
+      letter-spacing: 0.12em;
+    }
+
+    .line.is-note {
+      margin-top: 0.12em;
+      color: #999997;
+      font-size: clamp(14px, 3.7vw, 17px);
+      letter-spacing: 0.1em;
+    }
+
+    .line.is-accent { color: var(--soft-pink); }
+
+    .scene.is-leaving .line {
+      opacity: 0;
+      transform: translateY(-5px);
+      transition-delay: 0ms !important;
+    }
+
+    /* 结尾的淡粉色爱心，使用内嵌 SVG，不依赖外部图片 */
+    .ending-heart {
+      width: clamp(54px, 15vw, 76px);
+      height: auto;
+      opacity: 0;
+      transform: translateY(5px) scale(0.96);
+      transition: opacity 2.6s ease, transform 2.6s ease;
+    }
+
+    .ending-heart.is-visible {
+      opacity: 0.56;
+      transform: translateY(0) scale(1);
+    }
+
+    .ending-heart.is-fading {
+      opacity: 0;
+      transform: translateY(-2px) scale(1.025);
+    }
+
+    @media (max-width: 360px) {
+      .line { letter-spacing: 0.025em; }
+      .scene { gap: 0.42em; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .line, .ending-heart, body { transition-duration: 0.35s; }
+    }
+  </style>
+</head>
+<body>
+  <main aria-label="一段关于相识与回忆的文字短片">
+    <div class="scene" id="scene" aria-live="off"></div>
+    <svg class="ending-heart" id="ending-heart" viewBox="0 0 100 92" aria-hidden="true">
+      <path fill="#e3b9c3" d="M50 88 12.4 51.6C-8.5 31.4 5.7 1 29 4.1 39.4 5.5 46.2 12.3 50 19.2 53.8 12.3 60.6 5.5 71 4.1c23.3-3.1 37.5 27.3 16.6 47.5L50 88Z"/>
+    </svg>
+  </main>
+
+  <script>
+    // 每个场景中的文字会按行淡入，停留片刻后一起淡出。
+    const scenes = [
+      [
+        { text: "2026年07月06日", kind: "date" },
+        { text: "我们相识的第一天", kind: "note" }
+      ],
+      [
+        { text: "那个时候我是个迷茫的人，" },
+        { text: "找不到方向，" },
+        { text: "那个时候我还不知道你叫昕，" },
+        { text: "这部属于我们的电影，" },
+        { text: "也还没有上映" }
+      ],
+      [
+        { text: "后来慢慢发现，" },
+        { text: "你是个健谈的人。" },
+        { text: "我偷偷想，" },
+        { text: "如果可以一直这样下去，" },
+        { text: "该有多好", kind: "accent" }
+      ],
+      [
+        { text: "可惜美好的回忆，" },
+        { text: "总是短暂的", kind: "accent" }
+      ],
+      [
+        { text: "认识你这么久，" },
+        { text: "见过你哭，见过你笑，" },
+        { text: "见过你破防难过，" },
+        { text: "很多时候看你这样，" },
+        { text: "我心里很不是滋味" }
+      ],
+      [
+        { text: "好像记忆里，" },
+        { text: "我对你说过最多的一句话就是：" },
+        { text: "昕，开心点", kind: "accent" }
+      ],
+      [
+        { text: "现在的你，真的比那段难熬的日子" },
+        { text: "开心很多了。" },
+        { text: "只是我没办法再像从前那样，" },
+        { text: "和你正常聊天了" }
+      ],
+      [
+        { text: "就用这串代码，" },
+        { text: "纪念曾经发生的所有故事", kind: "accent" }
+      ],
+      [
+        { text: "有句歌词唱着，" },
+        { text: "已模糊的镜头，" },
+        { text: "拉不回那从前", kind: "accent" }
+      ],
+      [
+        { text: "来吧，昕，开心点。", kind: "accent" },
+        { text: "要做最好的自己，" },
+        { text: "做那个闪闪发光的自己", kind: "accent" }
+      ]
+    ];
+
+    const sceneElement = document.getElementById("scene");
+    const heartElement = document.getElementById("ending-heart");
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const timing = reducedMotion
+      ? { lineGap: 90, fadeIn: 350, hold: 800, fadeOut: 350 }
+      : { lineGap: 620, fadeIn: 1250, hold: 2700, fadeOut: 1400 };
+
+    function showScene(index) {
+      const lines = scenes[index];
+      sceneElement.classList.remove("is-leaving");
+      sceneElement.replaceChildren();
+
+      const lineElements = lines.map(({ text, kind = "" }) => {
+        const line = document.createElement("div");
+        line.className = `line${kind ? ` is-${kind}` : ""}`;
+        line.textContent = text;
+        sceneElement.appendChild(line);
+        return line;
+      });
+
+      // 下一帧再开始淡入，确保浏览器先绘制文字的初始透明状态。
+      requestAnimationFrame(() => {
+        lineElements.forEach((line, lineIndex) => {
+          window.setTimeout(() => line.classList.add("is-visible"), lineIndex * timing.lineGap);
+        });
+      });
+
+      const lastLineStartsAt = (lineElements.length - 1) * timing.lineGap;
+      const sceneDuration = lastLineStartsAt + timing.fadeIn + timing.hold;
+      window.setTimeout(() => {
+        sceneElement.classList.add("is-leaving");
+        window.setTimeout(() => {
+          if (index + 1 < scenes.length) {
+            showScene(index + 1);
+          } else {
+            showEnding();
+          }
+        }, timing.fadeOut);
+      }, sceneDuration);
+    }
+
+    function showEnding() {
+      // 文字消散后，底色转为纯白，爱心缓缓浮现再淡出。
+      document.body.classList.add("is-white");
+      window.setTimeout(() => {
+        heartElement.classList.add("is-visible");
+        window.setTimeout(() => {
+          heartElement.classList.remove("is-visible");
+          heartElement.classList.add("is-fading");
+        }, reducedMotion ? 1000 : 3000);
+      }, 250);
+    }
+
+    showScene(0);
+  </script>
+</body>
+</html>
